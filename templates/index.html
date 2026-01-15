@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registo de Cliques</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+
+        /* Container full-screen com grid */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+            grid-template-rows: repeat(2, 1fr);    /* 2 linhas */
+            gap: 10px;
+            height: 100vh;  /* ocupa toda a altura da tela */
+            width: 100vw;   /* ocupa toda a largura da tela */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Estilo dos botões */
+        .grid-container button {
+            width: 100%;
+            height: 100%;
+            font-size: 3rem;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        /* Cores diferentes para cada botão */
+        .grid-container button:nth-child(1) { background-color: #FF5733; }
+        .grid-container button:nth-child(2) { background-color: #33C1FF; }
+        .grid-container button:nth-child(3) { background-color: #33FF7A; }
+        .grid-container button:nth-child(4) { background-color: #FF33F6; }
+        .grid-container button:nth-child(5) { background-color: #FFC733; }
+        .grid-container button:nth-child(6) { background-color: #8E33FF; }
+
+        /* Feedback visual ao hover / toque */
+        .grid-container button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Media query: telemóveis (1 coluna) */
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(6, 1fr);
+            }
+            .grid-container button {
+                font-size: 3rem;
+            }
+        }
+
+        /* Media query: tablets (2 colunas) */
+        @media (min-width: 601px) and (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+            }
+            .grid-container button {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <button onclick="registar('PRAHF')">PRAHF</button>
+        <button onclick="registar('Estudo Autónomo')">Estudo autónomo</button>
+        <button onclick="registar('Saída aula')">Saída aula</button>
+        <button onclick="registar('Elementos avaliação')">Elementos avaliação</button>
+        <button onclick="registar('Outros')">Outros</button>
+        <button onclick="registar('Inativo')">Inativo</button>
+    </div>
+
+    <p id="msg" style="text-align:center; font-size:1.5rem; margin-top:10px;"></p>
+
+    <script>
+        function registar(botao) {
+            fetch("/clique", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ botao: botao })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("msg").innerText = "Clique registado: " + botao;
+            });
+        }
+    </script>
+</body>
+</html>
